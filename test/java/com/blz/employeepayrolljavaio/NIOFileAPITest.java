@@ -15,7 +15,7 @@ public class NIOFileAPITest {
 	private static String PLAY_WITH_NIO = "\\Desktop\\Java BridgeLabz Demo\\TempPlayGround";
 
 	@Test
-	public void givenPathWhenCheckedThenConfirm() throws IOException {
+	public void givenPath_WhenChecked_ThenConfirm() throws IOException {
 		// CHECK FILE EXISTS
 		Path homePath = Paths.get(HOME);
 		assertTrue(Files.exists(homePath));
@@ -46,5 +46,12 @@ public class NIOFileAPITest {
 		Files.newDirectoryStream(playPath).forEach(System.out::println);
 		Files.newDirectoryStream(playPath, path -> path.toFile().isFile() && path.toString().startsWith("temp"))
 				.forEach(System.out::println);
+	}
+
+	@Test
+	public void givenADirectory_WhenWatched_ListsAllTheActivities() throws IOException {
+		Path dir = Paths.get(HOME + PLAY_WITH_NIO);
+		Files.list(dir).filter(Files::isRegularFile).forEach(System.out::println);
+		new Java8WatchServiceExample(dir).processEvents();
 	}
 }
