@@ -31,4 +31,14 @@ public class EmployeePayrollServiceTest {
 				.readEmployeePayrollData(EmployeePayrollService.IOService.FILE_IO);
 		assertEquals(3, employeePayrollDataList.size());
 	}
+
+	// UC-2-DB_IO
+	@Test
+	public void givenEmployeePayrollDataInDB_WhenRetrieved_ShouldMatchEmployeeCount()
+			throws EmployeeDBConnectException {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		List<EmployeePayrollData> employeePayrollDataList = employeePayrollService
+				.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+		assertEquals(3, employeePayrollDataList.size());
+	}
 }

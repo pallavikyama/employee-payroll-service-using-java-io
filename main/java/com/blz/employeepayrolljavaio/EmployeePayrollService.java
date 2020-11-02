@@ -11,12 +11,15 @@ public class EmployeePayrollService {
 
 	private List<EmployeePayrollData> employeePayrollList;
 
+	public EmployeePayrollService() {
+	}
+
 	public EmployeePayrollService(List<EmployeePayrollData> employeePayrollList) {
 		this.employeePayrollList = employeePayrollList;
 	}
 
 	public static void main(String[] args) {
-		ArrayList<EmployeePayrollData> employeePayrollList = new ArrayList<>();
+		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService(employeePayrollList);
 		Scanner consoleInputReader = new Scanner(System.in);
 		employeePayrollService.readEmployeePayrollData(consoleInputReader);
@@ -37,6 +40,12 @@ public class EmployeePayrollService {
 	public List<EmployeePayrollData> readEmployeePayrollData(IOService ioService) {
 		if (ioService.equals(EmployeePayrollService.IOService.FILE_IO))
 			this.employeePayrollList = new EmployeePayrollFileIOService().readData();
+		if (ioService.equals(EmployeePayrollService.IOService.DB_IO))
+			try {
+				this.employeePayrollList = new EmployeePayrollDBIOService().readData();
+			} catch (EmployeeDBConnectException e) {
+				e.printStackTrace();
+			}
 		return this.employeePayrollList;
 	}
 
