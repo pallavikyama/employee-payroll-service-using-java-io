@@ -3,10 +3,10 @@ package com.blz.employeepayrolljavaio;
 import java.time.LocalDate;
 
 public class EmployeePayrollData {
-	private int id;
-	private String name;
-	private double salary;
-	private LocalDate startDate;
+	public int id;
+	public String name;
+	public double salary;
+	public LocalDate startDate;
 
 	public EmployeePayrollData(int id, String name, double salary) {
 		this.id = id;
@@ -22,5 +22,15 @@ public class EmployeePayrollData {
 	@Override
 	public String toString() {
 		return "ID=" + id + ", Name=" + name + ", Salary=" + salary;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		EmployeePayrollData that = (EmployeePayrollData) obj;
+		return id == that.id && Double.compare(that.salary, salary) == 0 && name.equals(that.name);
 	}
 }

@@ -49,6 +49,27 @@ public class EmployeePayrollService {
 		return this.employeePayrollList;
 	}
 
+	private EmployeePayrollData getEmployeePayrollData(String name) {
+		return this.employeePayrollList.stream()
+				.filter(employeePayrollDataItem -> employeePayrollDataItem.name.equals(name)).findFirst().orElse(null);
+	}
+
+	public void updateEmployeePayrollData(String name, double salary) throws EmployeeDBConnectException {
+		int result = new EmployeePayrollDBIOService().updateEmployeePayrollData(name, salary);
+		if (result == 0)
+			throw new EmployeeDBConnectException("Nothing is updated!");
+		else {
+			EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
+			if (employeePayrollData != null)
+				employeePayrollData.salary = salary;
+		}
+	}
+
+	public boolean checkEmployeePayrollInSyncWithDB(String name) throws EmployeeDBConnectException {
+		List<EmployeePayrollData> employeePayrollDataList = new EmployeePayrollDBIOService().getEmployeePayrollData();
+		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
+	}
+
 	public void writeEmployeePayrollData(IOService ioService) {
 		if (ioService.equals(EmployeePayrollService.IOService.CONSOLE_IO))
 			System.out.println("\nWriting Employee Payroll Roaster to Console\n" + employeePayrollList);

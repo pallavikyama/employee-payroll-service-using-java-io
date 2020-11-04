@@ -1,6 +1,7 @@
 package com.blz.employeepayrolljavaio;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,5 +41,15 @@ public class EmployeePayrollServiceTest {
 		List<EmployeePayrollData> employeePayrollDataList = employeePayrollService
 				.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
 		assertEquals(3, employeePayrollDataList.size());
+	}
+
+	// UC-3-DB_IO
+	@Test
+	public void givenSalaryForEmployee_WhenUpdated_ShouldSyncWithDB() throws EmployeeDBConnectException {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+		employeePayrollService.updateEmployeePayrollData("Terisa", 3000000.00);
+		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Terisa");
+		assertTrue(result);
 	}
 }
