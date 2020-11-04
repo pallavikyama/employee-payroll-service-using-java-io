@@ -2,6 +2,7 @@ package com.blz.employeepayrolljavaio;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class EmployeePayrollDBIOService {
 
-	private Statement employeePayrollDataStatement;
+	private PreparedStatement employeePayrollDataStatement;
 
 	private Connection getConnection() throws SQLException {
 		String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service?useSSL=false";
@@ -38,13 +39,14 @@ public class EmployeePayrollDBIOService {
 	}
 
 	public List<EmployeePayrollData> getEmployeePayrollData(String name) throws EmployeeDBConnectException {
-		String sql = String.format("SELECT * FROM employee_payroll WHERE name='%s'", name);
 		List<EmployeePayrollData> employeePayrollList;
-		try (Connection connection = this.getConnection()) {
-			employeePayrollDataStatement = connection.createStatement();
-			ResultSet resultSet = employeePayrollDataStatement.executeQuery(sql);
+		if (this.employeePayrollDataStatement == null)
+			this.prepareStatementForEmployeeData();
+		try {
+			employeePayrollDataStatement.setString(1, name);
+			ResultSet resultSet = employeePayrollDataStatement.executeQuery();
 			employeePayrollList = this.getEmployeePayrollData(resultSet);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new EmployeeDBConnectException("Failed to check sync with DB!");
 		}
 		return employeePayrollList;
@@ -61,9 +63,19 @@ public class EmployeePayrollDBIOService {
 				employeePayrollList.add(new EmployeePayrollData(id, name, salary, startDate));
 			}
 		} catch (SQLException e) {
-			throw new EmployeeDBConnectException("Couldn't get employee data as connection to database failed!");
+			throw new EmployeeDBConnectException("Couldn't retrieve resultSet of employee payroll data!");
 		}
 		return employeePayrollList;
+	}
+
+	private void prepareStatementForEmployeeData() throws EmployeeDBConnectException {
+		try {
+			String sql = "SELECT * FROM employee_payroll WHERE name=?";
+			Connection connection = this.getConnection();
+			employeePayrollDataStatement = connection.prepareStatement(sql);
+		} catch (SQLException e) {
+			throw new EmployeeDBConnectException("Failed to create prepared-statement!");
+		}
 	}
 
 	public int updateEmployeePayrollData(String name, double salary) throws EmployeeDBConnectException {

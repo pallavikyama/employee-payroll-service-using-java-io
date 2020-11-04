@@ -43,7 +43,7 @@ public class EmployeePayrollServiceTest {
 		assertEquals(3, employeePayrollDataList.size());
 	}
 
-	// UC-3-DB_IO
+	// UC-3&4-DB_IO
 	@Test
 	public void givenSalaryForEmployee_WhenUpdated_ShouldSyncWithDB() throws EmployeeDBConnectException {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
