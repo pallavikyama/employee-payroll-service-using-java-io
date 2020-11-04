@@ -66,7 +66,8 @@ public class EmployeePayrollService {
 	}
 
 	public boolean checkEmployeePayrollInSyncWithDB(String name) throws EmployeeDBConnectException {
-		List<EmployeePayrollData> employeePayrollDataList = new EmployeePayrollDBIOService().getEmployeePayrollData();
+		List<EmployeePayrollData> employeePayrollDataList = new EmployeePayrollDBIOService()
+				.getEmployeePayrollData(name);
 		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
 	}
 
