@@ -39,7 +39,7 @@ public class EmployeePayrollDBIOService {
 
 	public List<EmployeePayrollData> getEmployeePayrollData(String name) throws EmployeeDBConnectException {
 		String sql = String.format("SELECT * FROM employee_payroll WHERE name='%s'", name);
-		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
+		List<EmployeePayrollData> employeePayrollList;
 		try (Connection connection = this.getConnection()) {
 			employeePayrollDataStatement = connection.createStatement();
 			ResultSet resultSet = employeePayrollDataStatement.executeQuery(sql);
