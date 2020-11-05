@@ -10,11 +10,14 @@ public class EmployeePayrollService {
 	}
 
 	private List<EmployeePayrollData> employeePayrollList;
+	private EmployeePayrollDBIOService employeePayrollDBIOService;
 
 	public EmployeePayrollService() {
+		employeePayrollDBIOService = EmployeePayrollDBIOService.getInstance();
 	}
 
 	public EmployeePayrollService(List<EmployeePayrollData> employeePayrollList) {
+		this();
 		this.employeePayrollList = employeePayrollList;
 	}
 
@@ -42,7 +45,7 @@ public class EmployeePayrollService {
 			this.employeePayrollList = new EmployeePayrollFileIOService().readData();
 		if (ioService.equals(EmployeePayrollService.IOService.DB_IO))
 			try {
-				this.employeePayrollList = new EmployeePayrollDBIOService().readData();
+				this.employeePayrollList = employeePayrollDBIOService.readData();
 			} catch (EmployeeDBConnectException e) {
 				e.printStackTrace();
 			}
@@ -55,7 +58,7 @@ public class EmployeePayrollService {
 	}
 
 	public void updateEmployeePayrollData(String name, double salary) throws EmployeeDBConnectException {
-		int result = new EmployeePayrollDBIOService().updateEmployeePayrollData(name, salary);
+		int result = employeePayrollDBIOService.updateEmployeePayrollData(name, salary);
 		if (result == 0)
 			throw new EmployeeDBConnectException("Nothing is updated!");
 		else {
@@ -66,8 +69,7 @@ public class EmployeePayrollService {
 	}
 
 	public boolean checkEmployeePayrollInSyncWithDB(String name) throws EmployeeDBConnectException {
-		List<EmployeePayrollData> employeePayrollDataList = new EmployeePayrollDBIOService()
-				.getEmployeePayrollData(name);
+		List<EmployeePayrollData> employeePayrollDataList = employeePayrollDBIOService.getEmployeePayrollData(name);
 		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
 	}
 

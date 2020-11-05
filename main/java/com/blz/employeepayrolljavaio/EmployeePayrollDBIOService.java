@@ -12,7 +12,17 @@ import java.util.List;
 
 public class EmployeePayrollDBIOService {
 
-	private PreparedStatement employeePayrollDataStatement;
+	private PreparedStatement employeePayrollDataStatement; // Singleton object - Has only one instance in the memory
+	private static EmployeePayrollDBIOService employeePayrollDBIOService;
+
+	private EmployeePayrollDBIOService() {
+	}
+
+	public static EmployeePayrollDBIOService getInstance() {
+		if (employeePayrollDBIOService == null)
+			employeePayrollDBIOService = new EmployeePayrollDBIOService();
+		return employeePayrollDBIOService;
+	}
 
 	private Connection getConnection() throws SQLException {
 		String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service?useSSL=false";
